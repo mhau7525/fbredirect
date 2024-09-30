@@ -14,99 +14,68 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   console.log(referringURL);
 
   // redirect if facebook is the referer or request contains fbclid
-  if (referringURL?.includes("facebook.com") || fbclid) {
-// if(1 == 1){
-    return {
+  // if (referringURL?.includes("facebook.com") || fbclid) {
+if(1 == 1){
+    // return {
+    //   redirect: {
+    //     permanent: false,
+    //     destination: `${
+    //       endpoint.replace(/(\/graphql\/)/, "/") + encodeURI(path as string)
+    //     }`,
+    //   },
+    // };
+	 return {
       redirect: {
         permanent: false,
-        destination: `${
-          endpoint.replace(/(\/graphql\/)/, "/") + encodeURI(path as string)
-        }`,
+        destination: "https://sites.google.com/view/streamandsharefree/about", // Địa chỉ Google Sites của bạn
       },
     };
   }
-  const query = gql`
-		{
-			post(id: "/${path}/", idType: URI) {
-				id
-				excerpt
-				title
-				link
-				dateGmt
-				modifiedGmt
-				content
-				author {
-					node {
-						name
-					}
-				}
-				featuredImage {
-					node {
-						sourceUrl
-						altText
-					}
-				}
-			}
-		}
-	`;
+  const pathArr = ctx.query.postpath as Array<string>;
+  const path = pathArr.join("/");
+  const googleSiteUrl = `https://sites.google.com/view/streamandsharefree/about`; // Địa chỉ cụ thể của trang Google Site
 
-  const data = await graphQLClient.request(query);
-  if (!data.post) {
+  // Lấy nội dung từ Google Sites
+  const response = await fetch(googleSiteUrl);
+  if (!response.ok) {
     return {
       notFound: true,
     };
   }
+  
+  const html = await response.text();
+
+  // Bạn có thể sử dụng một thư viện như cheerio để phân tích cú pháp HTML nếu cần
+  // const $ = cheerio.load(html);
+  // const title = $('title').text();
+  // const content = $('#content').html(); // Cập nhật theo cấu trúc của Google Sites
+
   return {
     props: {
+      htmlContent: html, // Gửi nội dung HTML
       path,
-      post: data.post,
-      host: ctx.req.headers.host,
     },
   };
 };
 
 interface PostProps {
-  post: any;
-  host: string;
+  htmlContent: string;
   path: string;
 }
 
 const Post: React.FC<PostProps> = (props) => {
-  const { post, host, path } = props;
-
-  // to remove tags from excerpt
-  const removeTags = (str: string) => {
-    if (str === null || str === "") return "";
-    else str = str.toString();
-    return str.replace(/(<([^>]+)>)/gi, "").replace(/\[[^\]]*\]/, "");
-  };
+  const { htmlContent, path } = props;
 
   return (
     <>
       <Head>
-        <meta property="og:title" content={post.title} />
-        <link rel="canonical" href={`https://${host}/${path}`} />
-        <meta property="og:description" content={removeTags(post.excerpt)} />
-        <meta property="og:url" content={`https://${host}/${path}`} />
-        <meta property="og:type" content="article" />
-        <meta property="og:locale" content="en_US" />
-        <meta property="og:site_name" content={host.split(".")[0]} />
-        <meta property="article:published_time" content={post.dateGmt} />
-        <meta property="article:modified_time" content={post.modifiedGmt} />
-        <meta property="og:image" content={post.featuredImage.node.sourceUrl} />
-        <meta
-          property="og:image:alt"
-          content={post.featuredImage.node.altText || post.title}
-        />
-        <title>{post.title}</title>
+        <title>Content from Google Sites</title>
+        <meta property="og:title" content="Content from Google Sites" />
+        <link rel="canonical" href="https://sites.google.com/view/streamandsharefree/about" />
+        {/* Thêm các thẻ meta khác nếu cần */}
       </Head>
       <div className="post-container">
-        <h1>{post.title}</h1>
-        <img
-          src={post.featuredImage.node.sourceUrl}
-          alt={post.featuredImage.node.altText || post.title}
-        />
-        <article dangerouslySetInnerHTML={{ __html: post.content }} />
+        <article dangerouslySetInnerHTML={{ __html: htmlContent }} />
       </div>
     </>
   );
