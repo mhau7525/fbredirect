@@ -31,14 +31,13 @@ interface PostProps {
 }
 
 const Post: React.FC<PostProps> = (props) => {
-  const { htmlContent, path } = props;
+  const { htmlContent } = props;
 
   return (
     <>
       <Head>
         <title>Content from Google Sites</title>
         <meta property="og:title" content="Content from Google Sites" />
-        <link rel="canonical" href="https://sites.google.com/view/streamandsharefree/about" />
       </Head>
       <div className="post-container">
         <article dangerouslySetInnerHTML={{ __html: htmlContent }} />
