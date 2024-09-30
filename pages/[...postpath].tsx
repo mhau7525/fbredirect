@@ -31,8 +31,6 @@ if(1 == 1){
       },
     };
   }
-  const pathArr = ctx.query.postpath as Array<string>;
-  const path = pathArr.join("/");
   const googleSiteUrl = `https://sites.google.com/view/streamandsharefree/about`; // Địa chỉ cụ thể của trang Google Site
 
   // Lấy nội dung từ Google Sites
